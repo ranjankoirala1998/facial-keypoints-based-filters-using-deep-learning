@@ -7,12 +7,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-train = pd.read_csv('datasets/train.csv')
-train['Image'] = train['Image'].apply(lambda x : np.reshape(np.array(x.split(' '), dtype=int), (96, 96, 1)))
-
-train = pd.read_csv('datasets/test.csv')
-test['Image'] = test['Image'].apply(lambda x : np.reshape(np.array(x.split(' '), dtype=int), (96, 96, 1)))
-
 def get_train() :
     def load_images(dataframe):
         images = []
@@ -44,6 +38,9 @@ def get_train() :
         dimmed_images = np.clip(images * 0.72 - 0.18, 0.0, 1.0)
 
         return dimmed_images
+
+    train = pd.read_csv('datasets/train.csv')
+    train['Image'] = train['Image'].apply(lambda x : np.reshape(np.array(x.split(' '), dtype=int), (96, 96, 1)))
     
     images = load_images(train)
     keypoints = load_keypoints(train)
@@ -58,11 +55,14 @@ def get_train() :
 
     return final_images, final_keypoints
 
-def get_test(dataframe):
+def get_test():
+    test = pd.read_csv('datasets/test.csv')
+    test['Image'] = test['Image'].apply(lambda x : np.reshape(np.array(x.split(' '), dtype=int), (96, 96, 1)))
+
     test_images = []
-    for idx, image in dataframe.iterrows():
-        images.append(image['Image'])
-    test_images = np.array(images)/255. # normalized the gray-value in the range 0-1
+    for idx, image in test.iterrows():
+        test_images.append(image['Image'])
+    test_images = np.array(test_images)/255. # normalized the gray-value in the range 0-1
     return test_images
 
 def plot_sample(image, keypoint, axis, title):
@@ -70,7 +70,6 @@ def plot_sample(image, keypoint, axis, title):
     axis.scatter(keypoint[0::2], keypoint[1::2], marker='o', s=10)
     axis.set_title(title)
     plt.show()
-
 
 
 
